@@ -54,7 +54,7 @@ endif
 " {{{ OPTIONS
 
 setlocal textwidth=0
-setlocal ts=2 sw=2 expandtab smarttab
+setlocal tabstop=2 sw=2 expandtab smarttab
 setlocal comments=b:*,b:-,b:+,n:>,se:``` commentstring=>\ %s
 setlocal formatoptions=tron
 setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\\|^\\s*[+-\\*]\\s\\+
@@ -107,39 +107,39 @@ function! s:JumpToHeader(forward, visual)
     let motion = '?' . pattern
   endif
   while cnt > 0
-	  silent! execute motion
-	  let cnt = cnt - 1
+    silent! execute motion
+    let cnt = cnt - 1
   endwhile
   call histdel('/', -1)
   let @/ = save
 endfunction
 
 function! s:Indent(indent)
-  if getline('.') =~ '\v^\s*%([-*+]|\d\.)\s*$'
+  if getline('.') =~? '\v^\s*%([-*+]|\d\.)\s*$'
     if a:indent
-      normal >>
+      normal! >>
     else
-      normal <<
+      normal! <<
     endif
     call setline('.', substitute(getline('.'), '\([-*+]\|\d\.\)\s*$', '\1 ', ''))
-    normal $
-  elseif getline('.') =~ '\v^\s*(\s?\>)+\s*$'
+    normal! $
+  elseif getline('.') =~? '\v^\s*(\s?\>)+\s*$'
     if a:indent
       call setline('.', substitute(getline('.'), '>\s*$', '>> ', ''))
     else
       call setline('.', substitute(getline('.'), '\s*>\s*$', ' ', ''))
       call setline('.', substitute(getline('.'), '^\s\+$', '', ''))
     endif
-    normal $
+    normal! $
   endif
 endfunction
 
 function! s:IsAnEmptyListItem()
-  return getline('.') =~ '\v^\s*%([-*+]|\d\.)\s*$'
+  return getline('.') =~? '\v^\s*%([-*+]|\d\.)\s*$'
 endfunction
 
 function! s:IsAnEmptyQuote()
-  return getline('.') =~ '\v^\s*(\s?\>)+\s*$'
+  return getline('.') =~? '\v^\s*(\s?\>)+\s*$'
 endfunction
 
 " }}}
@@ -168,10 +168,10 @@ if g:markdown_enable_mappings
 
     if g:markdown_drop_empty_blockquotes
       " Remove empty quote and list items when press <CR>
-      inoremap <silent> <buffer> <script> <expr> <CR> <SID>IsAnEmptyQuote() \|\| <SID>IsAnEmptyListItem() ? '<C-O>:normal 0D<CR>' : '<CR>'
+      inoremap <silent> <buffer> <script> <expr> <CR> <SID>IsAnEmptyQuote() \|\| <SID>IsAnEmptyListItem() ? '<C-O>:normal! 0D<CR>' : '<CR>'
     else
       " Remove only empty list items when press <CR>
-      inoremap <silent> <buffer> <script> <expr> <CR> <SID>IsAnEmptyListItem() ? '<C-O>:normal 0D<CR>' : '<CR>'
+      inoremap <silent> <buffer> <script> <expr> <CR> <SID>IsAnEmptyListItem() ? '<C-O>:normal! 0D<CR>' : '<CR>'
     endif
 
     " Format tables
